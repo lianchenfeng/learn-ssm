@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaishengit.mapper.TopicMapper">
+
+    <cache/>
+
+    <select id="findById" parameterType="int" resultType="com.kaishengit.pojo.Topic" resultMap="TopicMap">
+        SELECT t_topic.*,username,avatar,nodename FROM t_topic
+        INNER JOIN t_user ON t_topic.`userid` = t_user.`id`
+        INNER JOIN t_node ON t_topic.`nodeid` =t_node.`id`
+        WHERE t_topic.`id` = #{id}
+    </select>
+    <select id="findByIdNew" parameterType="int" resultType="com.kaishengit.pojo.Topic" resultMap="TopicMap2">
+        SELECT  * FROM t_topic WHERE id = #{id}
+    </select>
+
+    <resultMap id="TopicMap2" type="com.kaishengit.pojo.Topic">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="text" property="text"/>
+        <result column="createtime" property="createtime"/>
+        <result column="userid" property="userid"/>
+        <result column="nodeid" property="nodeid"/>
+        <result column="viewnum" property="viewnum"/>
+        <result column="replynum" property="replynum"/>
+        <result column="likenum" property="likenum"/>
+        <result column="favnum" property="favnum"/>
+        <result column="replytime" property="replytime"/>
+        <association property="user" column="userid"
+                     javaType="com.kaishengit.pojo.User"
+                     select="com.kaishengit.mapper.UserMapper.findById">
+        </association>
+        <association property="node" column="nodeid"
+                     javaType="com.kaishengit.pojo.Node"
+                     select="com.kaishengit.mapper.NodeMapper.findByIdNew">
+        </association>
+
+    </resultMap>
+
+    <select id="findByparam" parameterType="map" resultType="com.kaishengit.pojo.Topic">
+        SELECT * FROM t_topic
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="title != null and title != ''">
+                title LIKE '%${title}%'
+            </if>
+            <if test="text != null and text != ''">
+                and text = #{text}
+            </if>
+            <if test="userid != null and userid != ''">
+                and userid = #{userid}
+            </if>
+            <if test="nodeid != null and nodeid != ''">
+                and nodeid = #{nodeid}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findByNodeIds" resultType="com.kaishengit.pojo.Topic">
+        SELECT * FROM t_topic
+        <where>
+            <if test="list != null">
+                nodeid in
+                <foreach collection="list" item="id" separator="," open="(" close=")">
+                    #{id}
+                </foreach>
+
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="TopicMap" type="com.kaishengit.pojo.Topic">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="text" property="text"/>
+        <result column="createtime" property="createtime"/>
+        <result column="userid" property="userid"/>
+        <result column="nodeid" property="nodeid"/>
+        <result column="viewnum" property="viewnum"/>
+        <result column="replynum" property="replynum"/>
+        <result column="likenum" property="likenum"/>
+        <result column="favnum" property="favnum"/>
+        <result column="replytime" property="replytime"/>
+        <association property="user" column="userid" javaType="com.kaishengit.pojo.User">
+            <id column="userid" property="id"/>
+            <result column="username" property="username"/>
+            <result column="avatar" property="avatar"/>
+        </association>
+        <association property="node" column="nodeid" javaType="com.kaishengit.pojo.Node">
+            <id column="nodeid" property="id"/>
+            <result column="nodename" property="nodename"/>
+        </association>
+
+    </resultMap>
+
+</mapper>
