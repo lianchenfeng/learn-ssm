@@ -8,6 +8,7 @@
         <typeAlias type="com.kaishengit.pojo.Student" alias="Student"/>
     </typeAliases>
 
+
     <environments default="forum">
         <environment id="dev">
             <transactionManager type="JDBC"></transactionManager>
@@ -15,7 +16,7 @@
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
                 <property name="url" value="jdbc:mysql:///test"/>
                 <property name="username" value="root"/>
-                <property name="password" value="123456"/>
+                <property name="password" value="root"/>
             </dataSource>
         </environment>
 
@@ -31,10 +32,13 @@
     </environments>
 
     <mappers>
-        <mapper resource="mapper/StudentMapper.xml"/>
+        <!--<mapper resource="mapper/StudentMapper.xml"/>
         <mapper resource="mapper/TopicMapper.xml"/>
         <mapper resource="mapper/NodeMapper.xml"/>
-        <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/UserMapper.xml"/>-->
+        <mapper class="com.kaishengit.mapper.NodeMapper"/>
+        <mapper class="com.kaishengit.mapper.UserMapper"/>
+        <mapper class="com.kaishengit.mapper.TopicMapper"/>
     </mappers>
 
 </configuration>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--开启基于注解的Bean管理和DI-->
+    <context:component-scan base-package="com.kaishengit"/>
+
+    <!--开启基于注解的AOP-->
+    <aop:aspectj-autoproxy/>
+
+    <!--Spring读取properties配置文件-->
+    <context:property-placeholder location="classpath:config.properties"/>
+
+  <!--配置DataSouce-->
+    <bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--配置JDBCTemplate0-->
+    <bean id="jdbcTeplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="datasource"/>
+    </bean>
+
+    <bean id="namedParameterJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+        <constructor-arg name="dataSource" ref="datasource"/>
+    </bean>
+
+    <!--JDBC的事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+         <property name="dataSource" ref="datasource"/>
+    </bean>
+
+    <!--基于注解的事务配置-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!--基于xml的事务管理-->
+    <!--<tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="save*"/>
+            <tx:method name="del*"/>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="update*"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="ponitCut" expression="execution(* com.kaishengit.service..*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="ponitCut"/>
+    </aop:config>-->
+
+    <!-- <bean id="userDao" class="com.kaishengit.dao.impl.UserDaoImpl"/>
+     <bean id="userService" class="com.kaishengit.service.impl.UserServiceImpl3">
+         <property name="userDao" ref="userDao"/>
+     </bean>-->
+
+    <!--AOP通知类-->
+    <!--<bean id="myAdivce" class="com.kaishengit.service.MyAdvices"/>
+
+    <aop:config>
+        <aop:aspect ref="myAdivce">
+            <aop:pointcut id="myPointcut" expression="execution(* com.kaishengit.dao..*.*(..))"/>
+            <aop:around method="aroundAdvice" pointcut-ref="myPointcut"/>
+            <aop:before method="beforeAdvice" pointcut-ref="mypointcut"/>
+            <aop:after-returning method="afterRetuingAdvice" pointcut-ref="mypointcut" returning="result"/>
+            <aop:after-throwing method="throwingAdvice" pointcut-ref="mypointcut" throwing="ex"/>
+            <aop:after method="afterAdvice" pointcut-ref="mypointcut"/>
+        </aop:aspect>
+    </aop:config>-->
+    <!--<bean id="userDao3" class="com.kaishengit.dao.impl.UserDaoImpl"/>
+
+     <! -<bean id="userService" class="com.kaishengit.service.impl.UserServiceImpl2" autowire="constructor"/>
+
+
+   <!- <bean id="userService" class="com.kaishengit.service.impl.UserServiceImpl2">
+        <constructor-arg name="userDao" ref="userDao"/>
+         <constructor-arg index="0" ref="userDao"/>
+        <constructor-arg type="com.kaishengit.dao.UserDao" ref="userDao"/>
+    </bean>-->
+
+
+    <!--<bean id="userService" class="com.kaishengit.service.impl.UserServiceImpl">
+        <property name="myUserDao" ref="userDao"/>
+        <property name="name" value="Java"/>
+        <property name="age"  value="23"/>
+        <property name="list">
+            <list>
+                <value>tom</value>
+                <value>jack</value>
+            </list>
+        </property>
+        <property name="maps">
+            <map>
+                <entry key="k1" value="23.45"/>
+                <entry key="k2" value="45.67"/>
+            </map>
+        </property>
+        <property name="properties">
+            <props>
+                <prop key="p1">v1</prop>
+                <prop key="p2">v2</prop>
+            </props>
+        </property>
+    </bean>-->
+
+    <!--<bean id="userDao" class="com.kaishengit.dao.impl.UserDaoImpl"/>
+    <bean id="userService" class="com.kaishengit.service.impl.UserServiceImpl">
+        <property name="myUserDao">
+            <ref bean="userDao"/>
+        </property>
+    </bean>-->
+
+    <!--<bean id="userDao" class="com.kaishengit.dao.impl.UserDaoImpl"/>
+    <bean id="userService" class="com.kaishengit.service.impl.UserServiceImpl">
+        <property name="myUserDao" ref="userDao"/>
+    </bean>-->
+
+
+    <!--<bean id="userDao" class="com.kaishengit.dao.impl.UserDaoImpl" lazy-init="true"/>-->
+
+    <!--<bean id="userDao" class="com.kaishengit.dao.impl.UserDaoImpl" scope="prototype"/>-->
+
+    <!--<bean id="userDao" class="com.kaishengit.dao.impl.UserDaoImpl2" init-method="init" destroy-method="destory"/>-->
+    <!--这是给上面id起的别名<alias name="userDao" alias="userDao22"/>-->
+
+</beans>

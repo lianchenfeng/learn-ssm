@@ -8,19 +8,19 @@
     <cache/>
 
     <insert id="save" parameterType="com.kaishengit.pojo.Node" useGeneratedKeys="true" keyProperty="id">
-        INSERT into t_node(nodename) VALUES (#{nodename})
+        INSERT  INTO t_node(nodename) VALUES (#{nodename})
     </insert>
 
     <insert id="saveWithMap" parameterType="map" useGeneratedKeys="true" keyProperty="id">
-        INSERT into t_node(nodename) VALUES (#{nodename})
+        INSERT  INTO t_node(nodename) VALUES (#{nodename})
     </insert>
+
 
     <select id="findById" parameterType="int" resultType="com.kaishengit.pojo.Node" resultMap="NodeMap">
         SELECT t_topic.*,nodename FROM t_node
-        INNER JOIN t_topic ON t_topic.`nodeid` =t_node.`id`
+        LEFT JOIN t_topic ON t_topic.`nodeid` = t_node.`id`
         WHERE t_node.`id` = #{id}
     </select>
-
     <select id="findByIdNew" resultType="com.kaishengit.pojo.Node">
         SELECT * FROM t_node WHERE id = #{id}
     </select>
@@ -28,7 +28,7 @@
     <resultMap id="NodeMap" type="com.kaishengit.pojo.Node">
         <id column="nodeid" property="id"/>
         <result column="nodename" property="nodename"/>
-        <collection property="topicList" ofType="com.kaishengit.pojo.Topic" >
+        <collection property="topicList" ofType="com.kaishengit.pojo.Topic">
             <id column="id" property="id"/>
             <result column="title" property="title"/>
             <result column="text" property="text"/>
@@ -42,4 +42,5 @@
             <result column="replytime" property="replytime"/>
         </collection>
     </resultMap>
+
 </mapper>

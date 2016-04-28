@@ -6,15 +6,24 @@
 
     <cache/>
 
+    <sql id="findTopicAndUserAndNode">
+        SELECT t_topic.*,username,avatar,nodename FROM t_topic
+        INNER JOIN t_user ON t_topic.`userid` = t_user.`id`
+        INNER JOIN t_node ON t_topic.`nodeid` = t_node.`id`
+    </sql>
+
+
     <select id="findById" parameterType="int" resultType="com.kaishengit.pojo.Topic" resultMap="TopicMap">
         SELECT t_topic.*,username,avatar,nodename FROM t_topic
         INNER JOIN t_user ON t_topic.`userid` = t_user.`id`
-        INNER JOIN t_node ON t_topic.`nodeid` =t_node.`id`
+        INNER JOIN t_node ON t_topic.`nodeid` = t_node.`id`
         WHERE t_topic.`id` = #{id}
     </select>
+
     <select id="findByIdNew" parameterType="int" resultType="com.kaishengit.pojo.Topic" resultMap="TopicMap2">
-        SELECT  * FROM t_topic WHERE id = #{id}
+        SELECT * FROM t_topic WHERE id = #{id}
     </select>
+
 
     <resultMap id="TopicMap2" type="com.kaishengit.pojo.Topic">
         <id column="id" property="id"/>
@@ -28,19 +37,16 @@
         <result column="likenum" property="likenum"/>
         <result column="favnum" property="favnum"/>
         <result column="replytime" property="replytime"/>
-        <association property="user" column="userid"
-                     javaType="com.kaishengit.pojo.User"
-                     select="com.kaishengit.mapper.UserMapper.findById">
-        </association>
-        <association property="node" column="nodeid"
-                     javaType="com.kaishengit.pojo.Node"
-                     select="com.kaishengit.mapper.NodeMapper.findByIdNew">
-        </association>
-
+        <association property="user"
+                     column="userid" javaType="com.kaishengit.pojo.User"
+                     select="com.kaishengit.mapper.UserMapper.findById"/>
+        <association property="node"
+                     column="nodeid" javaType="com.kaishengit.pojo.Node"
+                     select="com.kaishengit.mapper.NodeMapper.findByIdNew"/>
     </resultMap>
 
-    <select id="findByparam" parameterType="map" resultType="com.kaishengit.pojo.Topic">
-        SELECT * FROM t_topic
+    <select id="findByParam" parameterType="map" resultType="com.kaishengit.pojo.Topic">
+        SELECT * FROM  t_topic
         <trim prefix="where" prefixOverrides="and|or">
             <if test="title != null and title != ''">
                 title LIKE '%${title}%'
@@ -56,8 +62,7 @@
             </if>
         </trim>
     </select>
-
-    <select id="findByNodeIds" resultType="com.kaishengit.pojo.Topic">
+    <select id="findByNodeId" resultType="com.kaishengit.pojo.Topic">
         SELECT * FROM t_topic
         <where>
             <if test="list != null">
@@ -65,7 +70,6 @@
                 <foreach collection="list" item="id" separator="," open="(" close=")">
                     #{id}
                 </foreach>
-
             </if>
         </where>
     </select>
@@ -91,7 +95,7 @@
             <id column="nodeid" property="id"/>
             <result column="nodename" property="nodename"/>
         </association>
-
     </resultMap>
+
 
 </mapper>

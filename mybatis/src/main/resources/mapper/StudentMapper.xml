@@ -5,23 +5,25 @@
 <mapper namespace="com.kaishengit.mapper.StudentMapper">
 
     <insert id="save" parameterType="Student">
-        insert into t_student(stuname,stuage) values(#{stuname},#{stuage});
+        INSERT INTO t_student(stuname,stuage) VALUES (#{stuname},#{stuage});
     </insert>
 
     <update id="update" parameterType="Student">
-        update t_student set stuname = #{stuname},stuage=#{stuage} where id = #{id}
+        UPDATE t_student SET stuname = #{stuname},stuage=#{stuage} where id = #{id}
     </update>
-    
+
     <delete id="del" parameterType="int">
-        delete from t_student where id = #{id}
+        DELETE FROM t_student WHERE id = #{id}
     </delete>
-    
+
     <select id="findById" parameterType="int" resultType="Student">
-        select * FROM t_student WHERE id = #{id}
+        SELECT * FROM t_student WHERE id = #{id}
     </select>
 
     <select id="findAll" resultType="Student">
-        select * FROM t_student
+        SELECT * FROM t_student
     </select>
+
+
 
 </mapper>
